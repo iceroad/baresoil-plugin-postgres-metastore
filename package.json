@@ -1,0 +1,19 @@
+{
+  "name": "baresoil-plugin-postgres-metastore",
+  "version": "1.0.0",
+  "description": "Postgres-backed MetaStore implementation for Baresoil Server.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["baresoil", "postgres", "metastore"],
+  "author": "Mayank Lahiri <mlahiri@gmail.com>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "async": "^2.5.0",
+    "chalk": "^2.0.1",
+    "json-stable-stringify": "^1.0.1",
+    "lodash": "^4.17.4",
+    "pg": "^7.0.2"
+  }
+}
