@@ -4,7 +4,7 @@
   "description": "Postgres-backed MetaStore implementation for Baresoil Server.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Run tests through baresoil-server\" && exit 1"
   },
   "keywords": ["baresoil", "postgres", "metastore"],
   "author": "Mayank Lahiri <mlahiri@gmail.com>",
