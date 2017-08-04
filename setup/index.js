@@ -27,6 +27,14 @@ function SetupDatabase(postgresParams, cb) {
     database: postgresParams.rootDatabase,
   };
 
+  try {
+    assert(pgParamsSys.host, `Invalid Postgres host.`);
+    assert(pgParamsSys.user, `Invalid Postgres root user.`);
+    assert(pgParamsSys.password, `Invalid Postgres root password`);
+  } catch (e) {
+    return cb(e);
+  }
+
   // Generate connection parameters to database.
   const dbName = postgresParams.database || '';
   if (!dbName.match(/^[a-z0-9_]+$/i)) {
@@ -39,6 +47,13 @@ function SetupDatabase(postgresParams, cb) {
     password: postgresParams.password,
     database: postgresParams.database,
   };
+
+  try {
+    assert(pgParamsUser.user, `Invalid Postgres user.`);
+    assert(pgParamsUser.password, `Invalid Postgres password.`);
+  } catch (e) {
+    return cb(e);
+  }
 
   // Setup database.
   async.series([
@@ -55,8 +70,12 @@ function SetupDatabase(postgresParams, cb) {
 
 
 function SetupPostgresCmd(base, args) {
-  const config = base.getConfig(args);
-  SetupDatabase(config.MetaStore.postgres, (err) => {
+  const config = _.merge(
+    {},
+    base.getConfig(args).MetaStore.postgres,
+    base.getDiskConfig().config.server.MetaStore.postgres);
+
+  SetupDatabase(config, (err) => {
     if (err) {
       console.error(err);
       if (err.code === 'ER_BAD_DB_ERROR') {
