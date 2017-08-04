@@ -16,10 +16,17 @@ function createRole(dbParams, username, password, cb) {
     // Check if the role already exists.
     if (_.includes(roles, username)) {
       console.log(`+ Database role ${username} exists.`);
-      return cb();
+
+      // Set password if role already exists.
+      const qStr = `ALTER ROLE ${username} WITH PASSWORD '${password}';`
+      return pgquery(dbParams, qStr, (err) => {
+        if (err) return cb(err);
+        console.log(`+ Updated database role's password.`);
+        return cb();
+      });
     }
 
-    // Fix error: create an unprivileged "baresoil" user.
+    // Fix error: create an unprivileged user.
     const qStr = [
       'BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;',
       'DO',
@@ -30,7 +37,7 @@ function createRole(dbParams, username, password, cb) {
       '      FROM   pg_catalog.pg_user',
       `      WHERE  usename = '${username}'`,  // yes, "usename" not "username"
       '  ) THEN',
-      `      CREATE ROLE baresoil LOGIN PASSWORD '${password}';`,
+      `      CREATE ROLE ${username} LOGIN PASSWORD '${password}';`,
       '  END IF;',
       'END',
       '$body$;',
